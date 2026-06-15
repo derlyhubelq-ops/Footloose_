@@ -129,8 +129,7 @@ public class Footloose {
         }
         escaner.close();
     }
-
-    public static void iniciarSesion() {
+public static void iniciarSesion() {
         System.out.println("------ INICIAR SESION ------");
         boolean ok = false;
         do {
@@ -147,7 +146,7 @@ public class Footloose {
                 usuarioActivo = "admin";
                 System.out.println("Bienvenido, ADMINISTRADOR!");
                 ok = true;
-                menuCatalogo();
+                menuAdminCRUD();
                 return;
             }
 
