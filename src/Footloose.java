@@ -1,669 +1,636 @@
-import java.util.Scanner;
+import java.util.ArrayList;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Scanner;
 
-public class Footloosee {
+public class Footloose {
+
+    static ArrayList<String> nombresVaron   = new ArrayList<>();
+    static ArrayList<String> coloresVaron   = new ArrayList<>();
+    static ArrayList<Integer> tallasVaron   = new ArrayList<>();
+    static ArrayList<Double>  preciosVaron  = new ArrayList<>();
+    static ArrayList<Double>  descVaron     = new ArrayList<>();
+
+    static ArrayList<String> nombresMujer   = new ArrayList<>();
+    static ArrayList<String> coloresMujer   = new ArrayList<>();
+    static ArrayList<Integer> tallasMujer   = new ArrayList<>();
+    static ArrayList<Double>  preciosMujer  = new ArrayList<>();
+    static ArrayList<Double>  descMujer     = new ArrayList<>();
+
+    static ArrayList<String> correosRegistrados    = new ArrayList<>();
+    static ArrayList<String> contraseñasRegistradas = new ArrayList<>();
+
+    static String usuarioActivo  = "invitado";
+    static boolean sesionIniciada = false;
+    static boolean esAdmin        = false;
+
+    static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Scanner escaner = new Scanner(System.in);
-        boolean programaCorriendo = true;
+        inicializarDatos();
+        menuAcceso();
+    }
 
-        while (programaCorriendo) {
-            mostrarBienvenida();
-            int opcionAcceso = escaner.nextInt();
-            escaner.nextLine();
+    public static void inicializarDatos() {
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "R18 Hombres R18-Xw00245",        "Gris",             41, 167.90, 30.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Caven III",                  "Blanco total",     42, 229.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Transport",                  "Negro/suela blanca",41,189.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Jada Classic Sd",            "Beige",            40, 199.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Blaze Lite Nbk",             "Negro",            42, 199.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Skechers Bobs Squad 4",           "Blanco",           41, 279.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Skechers Uno Savvy",              "Blanco",           42, 249.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Court Lally Metallic",       "Blanco",           40, 179.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Puma Carina 3",                   "Negro",            42, 229.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Skechers Bobs Arch",              "Negro",            41, 239.00, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Wo0001",        "Marron oscuro",    41, 135.90, 20.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Cf00006",       "Azul oscuro",      42, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Cf00002",       "Azul",             41, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Cf00004",       "Marron",           43, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Fv00003",       "Chocolate",        42, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Jl00002",       "Negro",            41, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Lk00001",       "Camel",            42, 249.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Cc00004",       "Marron oscuro",    43, 229.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rfv-002",            "Marron claro",     42, 239.90, 0.0);
+        agregarProducto(nombresVaron, coloresVaron, tallasVaron, preciosVaron, descVaron,
+                "Renzo Renzini Rrz-Jq00004",       "Azul oscuro",      41, 199.90, 0.0);
 
-            if (opcionAcceso == 4) {
-                System.out.println("Gracias por visitar Footloose. Hasta luego!");
-                programaCorriendo = false;
-                continue;
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "R18 Mujeres R18-Xw00245",         "Gris",             37, 167.90, 30.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Caven III Wns",               "Blanco total",     38, 229.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Transport",                   "Negro/suela blanca",37,189.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Jada Classic Sd",             "Beige",            36, 199.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Blaze Lite Nbk Wns",          "Negro",            38, 199.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Skechers Bobs Squad 4",            "Blanco",           37, 279.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Skechers Uno Savvy",               "Blanco",           38, 249.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Court Lally Metallic",        "Blanco",           36, 179.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Puma Carina 3",                    "Negro",            38, 229.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Skechers Bobs Arch",               "Negro",            37, 239.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Top Model Tmo-N0013",              "Negro",            36, 109.90, 50.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Vizzano 6428.101.7286",            "Nude",             37, 139.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-Yz00077",            "Negro",            38,  99.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-Yq00007",            "Negro gamuza",     36,  79.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-I0025",              "Dorado",           37,  69.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-Yz00078",            "Negro track",      38, 149.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-Yq00008",            "Animal print",     36,  69.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-Rs00015",            "Negro textura",    37, 129.90, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-I0041",              "Nude oscuro",      38,  99.00, 0.0);
+        agregarProducto(nombresMujer, coloresMujer, tallasMujer, preciosMujer, descMujer,
+                "Footloose Ftl-I0026",              "Crema",            36,  79.90, 0.0);
+    }
+
+    static void agregarProducto(ArrayList<String> nombres, ArrayList<String> colores,
+                                ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs,
+                                String nombre, String color, int talla, double precio, double desc) {
+        nombres.add(nombre);
+        colores.add(color);
+        tallas.add(talla);
+        precios.add(precio);
+        descs.add(desc);
+    }
+
+    public static void menuAcceso() {
+        boolean corriendo = true;
+        while (corriendo) {
+            System.out.println("==========================================");
+            System.out.println("         BIENVENIDO A FOOTLOOSE!         ");
+            System.out.println("==========================================");
+            System.out.println(" Status: [" + usuarioActivo + "] [Admin: " + esAdmin + "]");
+            System.out.println("0.- Salir");
+            System.out.println("1.- Iniciar Sesion");
+            System.out.println("2.- Registrarse");
+            System.out.println("3.- Entrar como Invitado");
+            if (esAdmin) {
+                System.out.println("4.- PANEL DE ADMINISTRADOR");
             }
-
-            if (opcionAcceso == 2) {
-                registrarse(escaner);
-                continue;
-            }
-
-            if (!verificarAccesoUsuario(opcionAcceso, escaner)) {
-                continue;
-            }
-
-            boolean irAlMenuPrincipal = true;
-            while (irAlMenuPrincipal) {
-                mostrarMenuPrincipal();
-                int opcionGenero = escaner.nextInt();
-                escaner.nextLine();
-
-                if (opcionGenero == 3) {
-                    irAlMenuPrincipal = false;
+            System.out.println("Seleccione una opcion:");
+            int op = sc.nextInt();
+            sc.nextLine();
+            switch (op) {
+                case 0:
+                    System.out.println("Gracias por visitar Footloose. Hasta luego!");
+                    corriendo = false;
                     break;
-                }
-
-                if (opcionGenero != 1 && opcionGenero != 2) {
-                    System.out.println("Opcion incorrecta.");
-                    continue;
-                }
-
-                int prod = 0;
-                if (opcionGenero == 1) {
-                    menuVaron();
-                    System.out.println("Elija el numero de producto (1-20): ");
-                    prod = escaner.nextInt();
-                    escaner.nextLine();
-                } else {
-                    menuMujer();
-                    System.out.println("Elija el numero de producto (1-20): ");
-                    prod = escaner.nextInt();
-                    escaner.nextLine();
-                }
-
-                if (prod < 1 || prod > 20) {
-                    System.out.println("Producto no existente.");
-                    continue;
-                }
-
-                String productoSeleccionado = "";
-                String colorSeleccionado = "";
-                int tallaSeleccionada = 0;
-
-                if (opcionGenero == 1) {
-                    productoSeleccionado = obtenerProductoVaron(prod);
-                    colorSeleccionado = obtenerColorVaron(prod);
-                    tallaSeleccionada = obtenerTallaVaron(prod);
-                } else {
-                    productoSeleccionado = obtenerProductoMujer(prod);
-                    colorSeleccionado = obtenerColorMujer(prod);
-                    tallaSeleccionada = obtenerTallaMujer(prod);
-                }
-
-                int cantidadPares = pedirCantidad(escaner);
-
-                double totalAPagar = 0;
-                if (opcionGenero == 1) {
-                    totalAPagar = calcularTotalVaron(prod, cantidadPares);
-                } else {
-                    totalAPagar = calcularTotalMujer(prod, cantidadPares);
-                }
-
-                System.out.println("Total a pagar: S/. " + totalAPagar);
-
-                System.out.println("------------------------------------------");
-                System.out.println("        REGISTRO DE DATOS DE CLIENTE       ");
-                System.out.println("------------------------------------------");
-
-                System.out.println("Nombre: ");
-                String nombreCliente = escaner.nextLine();
-                System.out.println("Apellido: ");
-                String apellidoCliente = escaner.nextLine();
-
-                String dniCliente = "";
-                boolean dniValido = false;
-                while (!dniValido) {
-                    System.out.println("Documento DNI (Debe tener 8 caracteres) o presione '0' para regresar al menu: ");
-                    dniCliente = escaner.nextLine();
-
-                    if (dniCliente.equals("0")) {
-                        System.out.println("Registro cancelado. Volviendo al menu...");
-                        break;
-                    }
-
-                    if (dniCliente.length() == 8) {
-                        dniValido = true;
-                    } else {
-                        System.out.println("[ERROR] El DNI ingresado no es valido (debe tener exactamente 8 caracteres). Intente nuevamente.");
-                    }
-                }
-
-                if (!dniValido) {
-                    continue;
-                }
-
-                String telefonoCliente = "";
-                boolean telefonoValido = false;
-                while (!telefonoValido) {
-                    System.out.println("Telefono / Celular (Debe tener 9 caracteres) o presione '0' para regresar al menu: ");
-                    telefonoCliente = escaner.nextLine();
-
-                    if (telefonoCliente.equals("0")) {
-                        System.out.println("Registro cancelado. Volviendo al menu...");
-                        break;
-                    }
-
-                    if (telefonoCliente.length() == 9) {
-                        telefonoValido = true;
-                    } else {
-                        System.out.println("[ERROR] El numero de celular no es valido (debe tener exactamente 9 caracteres). Intente nuevamente.");
-                    }
-                }
-
-                if (!telefonoValido) {
-                    continue;
-                }
-
-                String tiendaRecojo = seleccionarTienda(escaner);
-
-                String[] correoContenedor = {"No requerido (Pago en Efectivo)"};
-                String metodoPagoTexto = procesarFlujoPago(totalAPagar, escaner, correoContenedor);
-
-                if (metodoPagoTexto.isEmpty()) {
-                    continue;
-                }
-
-                generarBoleta(correoContenedor[0], nombreCliente, apellidoCliente, dniCliente, telefonoCliente,
-                        productoSeleccionado, colorSeleccionado, tallaSeleccionada, cantidadPares,
-                        totalAPagar, metodoPagoTexto, tiendaRecojo);
-
-                irAlMenuPrincipal = false;
+                case 1:
+                    iniciarSesion();
+                    break;
+                case 2:
+                    registrarse();
+                    break;
+                case 3:
+                    usuarioActivo = "invitado";
+                    sesionIniciada = false;
+                    esAdmin = false;
+                    menuCatalogo();
+                    break;
+                case 4:
+                    if (esAdmin) menuAdminCRUD();
+                    else System.out.println("Opcion no valida.");
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+                    break;
             }
         }
-        escaner.close();
+        sc.close();
     }
 
-    public static void mostrarBienvenida() {
-        System.out.println("==========================================");
-        System.out.println("             BIENVENIDO A FOOTLOOSE!          ");
-        System.out.println("==========================================");
-        System.out.println("1. Iniciar Sesion");
-        System.out.println("2. Registrarse");
-        System.out.println("3. Entrar como Invitado");
-        System.out.println("4. Salir");
-        System.out.println("Seleccione una opcion: ");
-    }
-
-    public static boolean verificarAccesoUsuario(int opcionAcceso, Scanner escaner) {
-        switch (opcionAcceso) {
-            case 1:
-                String usuario = loginUsuario(escaner);
-                return !usuario.isEmpty();
-            case 3:
-                System.out.println("Entrando como Invitado...");
-                return true;
-            default:
-                System.out.println("Opcion no valida. Intente de nuevo.");
-                return false;
-        }
-    }
-
-    public static String loginUsuario(Scanner escaner) {
-        String correoIn, passIn;
-        boolean ingresoExitoso = false;
-        String nombre = " Prueba ";
-        System.out.println(" -----INICIAR SESION------");
+    public static void iniciarSesion() {
+        System.out.println("------ INICIAR SESION ------");
+        boolean ok = false;
         do {
-            System.out.println("Ingrese su correo ");
-            correoIn = escaner.nextLine();
-            System.out.println("Ingrese su contraseña");
-            passIn = escaner.nextLine();
-            boolean estructuraCorreoOk = correoIn.contains("@") && correoIn.endsWith(".com");
-            boolean structurePassOk = passIn.length() == 8;
+            System.out.println("Correo (debe contener '@' y terminar en '.com') o '0' para cancelar:");
+            String correo = sc.nextLine();
+            if (correo.equals("0")) return;
 
-            if (!estructuraCorreoOk || !structurePassOk) {
-                System.out.println("Error, los datos no cumplen requisitos:");
-                if (!estructuraCorreoOk) {
-                    System.out.println(" El correo debe contener @ y terminar en .com ");
-                }
-                if (!structurePassOk) {
-                    System.out.println("La contraseña debe tener exactamente 8 caracteres.");
-                }
-            } else if (correoIn.equals("admin@gmail.com") && passIn.equals("12345678")) {
-                System.out.println("Ingreso exitoso a Footloose");
-                ingresoExitoso = true;
-                System.out.println("Bienvenido " + nombre);
+            System.out.println("Contrasena :");
+            String pass = sc.nextLine();
+
+            if (correo.equals("admin@footloose.com") && pass.equals("admin123")) {
+                esAdmin = true;
+                sesionIniciada = true;
+                usuarioActivo = "admin";
+                System.out.println("Bienvenido, ADMINISTRADOR!");
+                ok = true;
+                menuCatalogo();
+                return;
+            }
+
+            boolean correoFmt = correo.contains("@") && correo.endsWith(".com");
+            boolean passFmt   = pass.length() == 8;
+
+            if (!correoFmt || !passFmt) {
+                System.out.println("[ERROR] Formato invalido.");
+                if (!correoFmt) System.out.println(" - El correo debe contener '@' y terminar en '.com'");
+                if (!passFmt)   System.out.println(" - La contrasena debe tener exactamente 8 caracteres");
             } else {
-                System.out.println("Credenciales no válidas");
-            }
-
-            if (!ingresoExitoso) {
-                System.out.println("¿Desea cancelar el inicio de sesion (S/N)?");
-                String cancelar = escaner.nextLine();
-                if (cancelar.equalsIgnoreCase("S")) {
-                    nombre = "";
-                    break;
+                int idx = correosRegistrados.indexOf(correo);
+                if (idx >= 0 && contraseñasRegistradas.get(idx).equals(pass)) {
+                    sesionIniciada = true;
+                    usuarioActivo = correo;
+                    System.out.println("Ingreso exitoso! Bienvenido " + correo);
+                    ok = true;
+                    menuCatalogo();
+                    return;
+                } else {
+                    System.out.println("Credenciales no validas.");
                 }
             }
-        } while (!ingresoExitoso);
-        return nombre;
+
+            if (!ok) {
+                System.out.println("Desea cancelar el inicio de sesion? (S/N):");
+                if (sc.nextLine().equalsIgnoreCase("S")) return;
+            }
+        } while (!ok);
     }
 
-    public static void registrarse(Scanner escaner) {
-        System.out.println("--- REGISTRARSE ---");
-        String correo = "";
-        boolean correoValido = false;
+    public static void registrarse() {
+        System.out.println("------ REGISTRARSE ------");
 
-        while (!correoValido) {
-            System.out.println("Cree su correo de usuario (Debe contener '@' y terminar en '.com'): ");
-            correo = escaner.nextLine();
+        String correo = "";
+        boolean correoOk = false;
+        while (!correoOk) {
+            System.out.println("Cree su correo (debe contener '@' y terminar en '.com'):");
+            correo = sc.nextLine();
             if (correo.contains("@") && correo.endsWith(".com")) {
-                correoValido = true;
+                if (correosRegistrados.contains(correo)) {
+                    System.out.println("[ERROR] Ese correo ya esta registrado.");
+                } else {
+                    correoOk = true;
+                }
             } else {
-                System.out.println("[ERROR] El correo debe contener '@' y terminar en '.com'. Intente nuevamente.");
+                System.out.println("[ERROR] Formato de correo invalido.");
             }
         }
 
         String pass = "";
-        boolean passValido = false;
-        while (!passValido) {
-            System.out.println("Cree su contrasena (Exactamente 8 caracteres): ");
-            pass = escaner.nextLine();
+        boolean passOk = false;
+        while (!passOk) {
+            System.out.println("Cree su contrasena (exactamente 8 caracteres):");
+            pass = sc.nextLine();
             if (pass.length() == 8) {
-                passValido = true;
+                passOk = true;
             } else {
-                System.out.println("[ERROR] La contrasena debe tener exactamente 8 caracteres. Intente nuevamente.");
+                System.out.println("[ERROR] La contrasena debe tener exactamente 8 caracteres.");
             }
         }
 
-        System.out.println("Registro completado con exito! Ahora puede iniciar sesion.");
+        correosRegistrados.add(correo);
+        contraseñasRegistradas.add(pass);
+        System.out.println("Registro exitoso! Ya puede iniciar sesion con su correo.");
     }
 
-    public static void mostrarMenuPrincipal() {
-        System.out.println("==========================================");
-        System.out.println("                  MENU PRINCIPAL               ");
-        System.out.println("==========================================");
-        System.out.println("1. Seccion Varon");
-        System.out.println("2. Seccion Mujer");
-        System.out.println("3. Regresar al Menu de Acceso / Salir");
-        System.out.println("Seleccione el genero que desea explorar: ");
-    }
+    public static void menuCatalogo() {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("==========================================");
+            System.out.println("             CATALOGO FOOTLOOSE           ");
+            System.out.println("==========================================");
+            System.out.println("1.- Seccion Varon");
+            System.out.println("2.- Seccion Mujer");
+            System.out.println("3.- Regresar");
+            System.out.println("Seleccione una opcion:");
+            int op = sc.nextInt();
+            sc.nextLine();
 
-    public static void menuVaron() {
-        System.out.println("------ PRODUCTOS VARON ------");
-        System.out.println("-------  ZAPATILLAS  ---------");
-        System.out.println("1. R18 Hombres R18-Xw00245 | Gris | T41 | S/. 167.90 [Lleva 2 y obtén 30% desc.]");
-        System.out.println("2. Puma Caven III | Blanco total | T42 | S/. 229.00");
-        System.out.println("3. Puma Transport | Negro/suela blanca | T41 | S/. 189.00");
-        System.out.println("4. Puma Jada Classic Sd | Beige | T40 | S/. 199.00");
-        System.out.println("5. Puma Blaze Lite Nbk | Negro | T42 | S/. 199.00");
-        System.out.println("6. Skechers Bobs Squad 4 | Blanco | T41 | S/. 279.00");
-        System.out.println("7. Skechers Uno Savvy | Blanco | T42 | S/. 249.00");
-        System.out.println("8. Puma Court Lally Metallic | Blanco | T40 | S/. 179.00");
-        System.out.println("9. Puma Carina 3 | Negro | T42 | S/. 229.00");
-        System.out.println("10. Skechers Bobs Arch | Negro | T41 | S/. 239.00");
-        System.out.println("-------  ZAPATOS  ---------");
-        System.out.println("11. Renzo Renzini Rrz-Wo0001 | Marron oscuro | T41 | S/. 135.90 [Lleva 2 y obtén 20% desc.]");
-        System.out.println("12. Renzo Renzini Rrz-Cf00006 | Azul oscuro | T42 | S/. 249.90");
-        System.out.println("13. Renzo Renzini Rrz-Cf00002 | Azul | T41 | S/. 249.90");
-        System.out.println("14. Renzo Renzini Rrz-Cf00004 | Marron | T43 | S/. 249.90");
-        System.out.println("15. Renzo Renzini Rrz-Fv00003 | Chocolate | T42 | S/. 249.90");
-        System.out.println("16. Renzo Renzini Rrz-Jl00002 | Negro | T41 | S/. 249.90");
-        System.out.println("17. Renzo Renzini Rrz-Lk00001 | Camel | T42 | S/. 249.90");
-        System.out.println("18. Renzo Renzini Rrz-Cc00004 | Marron oscuro | T43 | S/. 229.90");
-        System.out.println("19. Renzo Renzini Rfv-002 | Marron claro | T42 | S/. 239.90");
-        System.out.println("20. Renzo Renzini Rrz-Jq00004 | Azul oscuro | T41 | S/. 199.90");
-    }
+            if (op == 3) {
+                volver = true;
+            } else if (op == 1 || op == 2) {
+                ArrayList<String>  nombres = (op == 1) ? nombresVaron  : nombresMujer;
+                ArrayList<String>  colores = (op == 1) ? coloresVaron  : coloresMujer;
+                ArrayList<Integer> tallas  = (op == 1) ? tallasVaron   : tallasMujer;
+                ArrayList<Double>  precios = (op == 1) ? preciosVaron  : preciosMujer;
+                ArrayList<Double>  descs   = (op == 1) ? descVaron     : descMujer;
+                String seccion = (op == 1) ? "VARON" : "MUJER";
 
-    public static void menuMujer() {
-        System.out.println("------ PRODUCTOS MUJER ------");
-        System.out.println("-------  ZAPATILLAS  ---------");
-        System.out.println("1. R18 Mujeres R18-Xw00245 | Gris | T37 | S/. 167.90 [Lleva 2  y obtén 30% desc.]");
-        System.out.println("2. Puma Caven III Wns | Blanco total | T38 | S/. 229.00");
-        System.out.println("3. Puma Transport | Negro/suela blanca | T37 | S/. 189.00");
-        System.out.println("4. Puma Jada Classic Sd | Beige | T36 | S/. 199.00");
-        System.out.println("5. Puma Blaze Lite Nbk Wns | Negro | T38 | S/. 199.00");
-        System.out.println("6. Skechers Bobs Squad 4 | Blanco | T37 | S/. 279.00");
-        System.out.println("7. Skechers Uno Savvy | Blanco | T38 | S/. 249.00");
-        System.out.println("8. Puma Court Lally Metallic | Blanco | T36 | S/. 179.00");
-        System.out.println("9. Puma Carina 3 | Negro | T38 | S/. 229.00");
-        System.out.println("10. Skechers Bobs Arch | Negro | T37 | S/. 239.00");
-        System.out.println("-------  ZAPATOS  ---------");
-        System.out.println("11. Top Model Tmo-N0013 | Negro | T36 | S/. 109.90 [Lleva 2 y obtén 50% desc.]");
-        System.out.println("12. Vizzano 6428.101.7286 | Nude | T37 | S/. 139.90");
-        System.out.println("13. Footloose Ftl-Yz00077 | Negro | T38 | S/. 99.90");
-        System.out.println("14. Footloose Ftl-Yq00007 | Negro gamuza | T36 | S/. 79.90");
-        System.out.println("15. Footloose Ftl-I0025 | Dorado | T37 | S/. 69.90");
-        System.out.println("16. Footloose Ftl-Yz00078 | Negro track | T38 | S/. 149.90");
-        System.out.println("17. Footloose Ftl-Yq00008 | Animal print | T36 | S/. 69.90");
-        System.out.println("18. Footloose Ftl-Rs00015 | Negro textura | T37 | S/. 129.90");
-        System.out.println("19. Footloose Ftl-I0041 | Nude oscuro | T38 | S/. 99.00");
-        System.out.println("20. Footloose Ftl-I0026 | Crema | T36 | S/. 79.90");
-    }
-
-    public static String obtenerProductoVaron(int opcion) {
-        switch (opcion) {
-            case 1: return "R18 Hombres R18-Xw00245";
-            case 2: return "Puma Caven III";
-            case 3: return "Puma Transport";
-            case 4: return "Puma Jada Classic Sd";
-            case 5: return "Puma Blaze Lite Nbk";
-            case 6: return "Skechers Bobs Squad 4";
-            case 7: return "Skechers Uno Savvy";
-            case 8: return "Puma Court Lally Metallic";
-            case 9: return "Puma Carina 3";
-            case 10: return "Skechers Bobs Arch";
-            case 11: return "Renzo Renzini Rrz-Wo0001";
-            case 12: return "Renzo Renzini Rrz-Cf00006";
-            case 13: return "Renzo Renzini Rrz-Cf00002";
-            case 14: return "Renzo Renzini Rrz-Cf00004";
-            case 15: return "Renzo Renzini Rrz-Fv00003";
-            case 16: return "Renzo Renzini Rrz-Jl00002";
-            case 17: return "Renzo Renzini Rrz-Lk00001";
-            case 18: return "Renzo Renzini Rrz-Cc00004";
-            case 19: return "Renzo Renzini Rfv-002";
-            case 20: return "Renzo Renzini Rrz-Jq00004";
-            default: return "";
-        }
-    }
-
-    public static String obtenerProductoMujer(int opcion) {
-        switch (opcion) {
-            case 1: return "R18 Mujeres R18-Xw00245";
-            case 2: return "Puma Caven III Wns";
-            case 3: return "Puma Transport";
-            case 4: return "Puma Jada Classic Sd";
-            case 5: return "Puma Blaze Lite Nbk Wns";
-            case 6: return "Skechers Bobs Squad 4";
-            case 7: return "Skechers Uno Savvy";
-            case 8: return "Puma Court Lally Metallic";
-            case 9: return "Puma Carina 3";
-            case 10: return "Skechers Bobs Arch";
-            case 11: return "Top Model Tmo-N0013";
-            case 12: return "Vizzano 6428.101.7286";
-            case 13: return "Footloose Ftl-Yz00077";
-            case 14: return "Footloose Ftl-Yq00007";
-            case 15: return "Footloose Ftl-I0025";
-            case 16: return "Footloose Ftl-Yz00078";
-            case 17: return "Footloose Ftl-Yq00008";
-            case 18: return "Footloose Ftl-Rs00015";
-            case 19: return "Footloose Ftl-I0041";
-            case 20: return "Footloose Ftl-I0026";
-            default: return "";
-        }
-    }
-
-    public static String obtenerColorVaron(int opcion) {
-        switch (opcion) {
-            case 1: return "Gris"; case 2: return "Blanco total"; case 3: return "Negro/suela blanca";
-            case 4: return "Beige"; case 5: return "Negro"; case 6: return "Blanco";
-            case 7: return "Blanco"; case 8: return "Blanco"; case 9: return "Negro";
-            case 10: return "Negro"; case 11: return "Marron oscuro"; case 12: return "Azul oscuro";
-            case 13: return "Azul"; case 14: return "Marron"; case 15: return "Chocolate";
-            case 16: return "Negro"; case 17: return "Camel"; case 18: return "Marron oscuro";
-            case 19: return "Marron claro"; case 20: return "Azul oscuro"; default: return "";
-        }
-    }
-
-    public static int obtenerTallaVaron(int opcion) {
-        switch (opcion) {
-            case 1: case 3: case 6: case 10: case 11: case 13: case 16: case 20: return 41;
-            case 2: case 5: case 7: case 9: case 12: case 15: case 17: case 19: return 42;
-            case 4: case 8: return 40;
-            case 14: case 18: return 43;
-            default: return 0;
-        }
-    }
-
-    public static String obtenerColorMujer(int opcion) {
-        switch (opcion) {
-            case 1: return "Gris"; case 2: return "Blanco total"; case 3: return "Negro/suela blanca";
-            case 4: return "Beige"; case 5: return "Negro"; case 6: return "Blanco";
-            case 7: return "Blanco"; case 8: return "Blanco"; case 9: return "Negro";
-            case 10: return "Negro"; case 11: return "Negro"; case 12: return "Nude";
-            case 13: return "Negro"; case 14: return "Negro gamuza"; case 15: return "Dorado";
-            case 16: return "Negro track"; case 17: return "Animal print"; case 18: return "Negro textura";
-            case 19: return "Nude oscuro"; case 20: return "Crema"; default: return "";
-        }
-    }
-
-    public static int obtenerTallaMujer(int opcion) {
-        switch (opcion) {
-            case 1: case 3: case 6: case 10: case 12: case 15: case 18: return 37;
-            case 2: case 5: case 7: case 9: case 13: case 16: case 19: return 38;
-            case 4: case 8: case 11: case 14: case 17: case 20: return 36;
-            default: return 0;
-        }
-    }
-
-    public static double calcularTotalVaron(int opcion, int cantidad) {
-        if (cantidad <= 0) return 0;
-        double total = 0;
-        switch (opcion) {
-            case 1:
-                if (cantidad >= 2) {
-                    total = ((167.90 * 2) * 0.70) + (167.90 * (cantidad - 2));
-                    System.out.println("[PROMO] Se aplicó un 30% de descuento solo a los 2 primeros pares.");
-                } else {
-                    total = 167.90 * cantidad;
+                System.out.println("------ PRODUCTOS " + seccion + " ------");
+                System.out.println("------- ZAPATILLAS (1-10) -------");
+                for (int i = 0; i < 10 && i < nombres.size(); i++) {
+                    imprimirProducto(i, nombres, colores, tallas, precios, descs);
                 }
-                break;
-            case 2: total = 229.00 * cantidad; break;
-            case 3: total = 189.00 * cantidad; break;
-            case 4: total = 199.00 * cantidad; break;
-            case 5: total = 199.00 * cantidad; break;
-            case 6: total = 279.00 * cantidad; break;
-            case 7: total = 249.00 * cantidad; break;
-            case 8: total = 179.00 * cantidad; break;
-            case 9: total = 229.00 * cantidad; break;
-            case 10: total = 239.00 * cantidad; break;
-            case 11:
-                if (cantidad >= 2) {
-                    total = ((135.90 * 2) * 0.80) + (135.90 * (cantidad - 2));
-                    System.out.println("[PROMO] Se aplicó un 20% de descuento solo a los 2 primeros pares.");
-                } else {
-                    total = 135.90 * cantidad;
+                System.out.println("------- ZAPATOS (11-" + nombres.size() + ") -------");
+                for (int i = 10; i < nombres.size(); i++) {
+                    imprimirProducto(i, nombres, colores, tallas, precios, descs);
                 }
-                break;
-            case 12: total = 249.90 * cantidad; break;
-            case 13: total = 249.90 * cantidad; break;
-            case 14: total = 249.90 * cantidad; break;
-            case 15: total = 249.90 * cantidad; break;
-            case 16: total = 249.90 * cantidad; break;
-            case 17: total = 249.90 * cantidad; break;
-            case 18: total = 229.90 * cantidad; break;
-            case 19: total = 239.90 * cantidad; break;
-            case 20: total = 199.90 * cantidad; break;
-            default: total = 0;
+
+                System.out.println("Elija el numero de producto (1-" + nombres.size() + "):");
+                int prod = sc.nextInt();
+                sc.nextLine();
+                if (prod >= 1 && prod <= nombres.size()) {
+                    int idx = prod - 1;
+
+                    System.out.println("Ingrese la cantidad de pares que desea llevar:");
+                    int cantidad = sc.nextInt();
+                    sc.nextLine();
+                    if (cantidad > 0) {
+                        double precio = precios.get(idx);
+                        double desc   = descs.get(idx);
+                        double total;
+                        if (desc > 0 && cantidad >= 2) {
+                            double factor = 1.0 - (desc / 100.0);
+                            total = (precio * 2 * factor) + (precio * (cantidad - 2));
+                            System.out.println("[PROMO] Se aplico " + (int)desc + "% descuento en los 2 primeros pares.");
+                        } else {
+                            total = precio * cantidad;
+                        }
+                        System.out.printf("Total a pagar: S/. %.2f%n", total);
+
+                        System.out.println("------ REGISTRO DE CLIENTE ------");
+                        System.out.println("Nombre:");
+                        String nombre = sc.nextLine();
+                        System.out.println("Apellido:");
+                        String apellido = sc.nextLine();
+
+                        String dni = pedirCampoLongitud("DNI (8 digitos)", 8);
+                        if (!dni.equals("CANCELADO")) {
+                            String telefono = pedirCampoLongitud("Telefono/Celular (9 digitos)", 9);
+                            if (!telefono.equals("CANCELADO")) {
+                                String tienda = seleccionarTienda();
+                                String[] correoArr = {"No requerido (Pago en Efectivo)"};
+                                String metodoPago = procesarFlujoPago(total, correoArr);
+                                if (!metodoPago.isEmpty()) {
+                                    generarBoleta(correoArr[0], nombre, apellido, dni, telefono,
+                                            nombres.get(idx), colores.get(idx), tallas.get(idx),
+                                            cantidad, total, metodoPago, tienda);
+                                    volver = true;
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("Cantidad invalida.");
+                    }
+                } else {
+                    System.out.println("Producto no existente.");
+                }
+            } else {
+                System.out.println("Opcion invalida.");
+            }
         }
-        return total;
     }
 
-    public static double calcularTotalMujer(int opcion, int cantidad) {
-        if (cantidad <= 0) return 0;
-        double total = 0;
-        switch (opcion) {
-            case 1:
-                if (cantidad >= 2) {
-                    total = ((167.90 * 2) * 0.70) + (167.90 * (cantidad - 2));
-                    System.out.println("[PROMO] Se aplicó un 30% de descuento solo a los 2 primeros pares.");
-                } else {
-                    total = 167.90 * cantidad;
-                }
-                break;
-            case 2: total = 229.00 * cantidad; break;
-            case 3: total = 189.00 * cantidad; break;
-            case 4: total = 199.00 * cantidad; break;
-            case 5: total = 199.00 * cantidad; break;
-            case 6: total = 279.00 * cantidad; break;
-            case 7: total = 249.00 * cantidad; break;
-            case 8: total = 179.00 * cantidad; break;
-            case 9: total = 229.00 * cantidad; break;
-            case 10: total = 239.00 * cantidad; break;
-            case 11:
-                if (cantidad >= 2) {
-                    total = ((109.90 * 2) * 0.50) + (109.90 * (cantidad - 2));
-                    System.out.println("[PROMO] Se aplicó un 50% de descuento solo a los 2 primeros pares.");
-                } else {
-                    total = 109.90 * cantidad;
-                }
-                break;
-            case 12: total = 139.90 * cantidad; break;
-            case 13: total = 99.90 * cantidad; break;
-            case 14: total = 79.90 * cantidad; break;
-            case 15: total = 69.90 * cantidad; break;
-            case 16: total = 149.90 * cantidad; break;
-            case 17: total = 69.90 * cantidad; break;
-            case 18: total = 129.90 * cantidad; break;
-            case 19: total = 99.00 * cantidad; break;
-            case 20: total = 79.90 * cantidad; break;
-            default: total = 0;
+    static void imprimirProducto(int i, ArrayList<String> nombres, ArrayList<String> colores,
+                                 ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
+        String promo = descs.get(i) > 0 ? " [Lleva 2 y obtén " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
+        System.out.printf("%2d. %-35s | %-18s | T%d | S/. %.2f%s%n",
+                i + 1, nombres.get(i), colores.get(i), tallas.get(i), precios.get(i), promo);
+    }
+
+    static String pedirCampoLongitud(String etiqueta, int longitud) {
+        while (true) {
+            System.out.println(etiqueta + " o '0' para cancelar:");
+            String val = sc.nextLine();
+            if (val.equals("0")) {
+                System.out.println("Operacion cancelada.");
+                return "CANCELADO";
+            }
+            if (val.length() == longitud) return val;
+            System.out.println("[ERROR] Debe tener exactamente " + longitud + " caracteres.");
         }
-        return total;
     }
 
-    public static int pedirCantidad(Scanner escaner) {
-        System.out.println("Ingrese la cantidad de pares que desea llevar: ");
-        int cantidad = escaner.nextInt();
-        escaner.nextLine();
-        return cantidad;
-    }
-
-    public static String seleccionarTienda(Scanner escaner) {
-        System.out.println("--- SELECCIONE LA TIENDA DE RECOJO ---");
-        System.out.println("1. Tienda Real Plaza Juliaca (Av. Nueva Zelanda)");
-        System.out.println("2. Tienda Jiron Huancane (Centro de Juliaca)");
-        System.out.println("3. Tienda Real Plaza Arequipa (Av. Ejercito)");
-        System.out.println("4. Tienda Mall Plaza Bellavista (Callao - Lima)");
-        System.out.println("5. Tienda Plaza Norte (Independencia - Lima)");
-        System.out.println("Seleccione una tienda (1-5): ");
-        int opcion = escaner.nextInt();
-        escaner.nextLine();
-        switch (opcion) {
-            case 1: return "Tienda Real Plaza Juliaca (Puno)";
-            case 2: return "Tienda Jiron Huancane (Juliaca - Puno)";
-            case 3: return "Tienda Real Plaza Arequipa (Arequipa)";
-            case 4: return "Tienda Mall Plaza Bellavista (Callao)";
-            case 5: return "Tienda Plaza Norte (Independencia - Lima)";
+    public static String seleccionarTienda() {
+        System.out.println("--- SELECCIONE TIENDA DE RECOJO ---");
+        System.out.println("1. Real Plaza Juliaca (Av. Nueva Zelanda)");
+        System.out.println("2. Jiron Huancane (Centro de Juliaca)");
+        System.out.println("3. Real Plaza Arequipa (Av. Ejercito)");
+        System.out.println("4. Mall Plaza Bellavista (Callao - Lima)");
+        System.out.println("5. Plaza Norte (Independencia - Lima)");
+        System.out.println("Seleccione (1-5):");
+        int op = sc.nextInt();
+        sc.nextLine();
+        switch (op) {
+            case 1: return "Real Plaza Juliaca (Puno)";
+            case 2: return "Jiron Huancane (Juliaca - Puno)";
+            case 3: return "Real Plaza Arequipa (Arequipa)";
+            case 4: return "Mall Plaza Bellavista (Callao)";
+            case 5: return "Plaza Norte (Independencia - Lima)";
             default: return "Tienda Central Footloose (Lima)";
         }
     }
 
-    public static String procesarFlujoPago(double total, Scanner escaner, String[] correoContenedor) {
-        System.out.println("--- SELECCIONE METODO DE PAGO ---");
+    public static String procesarFlujoPago(double total, String[] correoArr) {
+        System.out.println("--- METODO DE PAGO ---");
         System.out.println("1. Tarjeta de Credito");
-        System.out.println("2. En Efectivo");
-        System.out.println("Seleccione su metodo de pago: ");
-        int metodo = escaner.nextInt();
-        escaner.nextLine();
-
-        if (metodo == 1) {
-            validaPagoTarjeta(escaner, total, correoContenedor);
+        System.out.println("2. Efectivo");
+        System.out.println("Seleccione:");
+        int met = sc.nextInt();
+        sc.nextLine();
+        if (met == 1) {
+            validarTarjeta(total, correoArr);
             return "Tarjeta de Credito";
-        } else if (metodo == 2) {
-            if (pagarEnEfectivo(total, escaner)) {
-                return "Efectivo";
-            }
+        } else if (met == 2) {
+            if (pagarEfectivo(total)) return "Efectivo";
         } else {
-            System.out.println("Metodo de pago invalido. Operacion cancelada.");
+            System.out.println("Metodo invalido. Operacion cancelada.");
         }
         return "";
     }
 
-    public static void validaPagoTarjeta(Scanner escaner, double total, String[] correoContenedor) {
-        String nroTarjeta, fechaVencimiento, cvv, correoIn;
-        boolean pAprobado = false;
-        System.out.println("Monto total a pagar con tarjeta es: S/. " + total);
-
+    public static void validarTarjeta(double total, String[] correoArr) {
+        System.out.printf("Monto a pagar: S/. %.2f%n", total);
         boolean correoOk = false;
         do {
-            System.out.println("Ingrese su correo electronico para el envio de la boleta (Debe contener '@' y terminar en '.com'):");
-            correoIn = escaner.nextLine();
-            if (correoIn.contains("@") && correoIn.endsWith(".com")) {
+            System.out.println("Ingrese correo para boleta (con '@' y '.com'):");
+            String c = sc.nextLine();
+            if (c.contains("@") && c.endsWith(".com")) {
+                correoArr[0] = c;
                 correoOk = true;
-                correoContenedor[0] = correoIn;
             } else {
-                System.out.println("[ERROR] Formato incorrecto. El correo debe contener '@' y terminar en '.com'");
+                System.out.println("[ERROR] Formato de correo invalido.");
             }
         } while (!correoOk);
 
+        boolean aprobado = false;
         do {
-            System.out.println("Ingrese los 16 digitos de la tarjeta");
-            nroTarjeta = escaner.nextLine();
-            System.out.println("Ingrese la fecha de caducidad (MM/AA) ");
-            fechaVencimiento = escaner.nextLine();
-            System.out.println("Ingrese el código de seguridad CVV");
-            cvv = escaner.nextLine();
+            System.out.println("Numero de tarjeta (16 digitos):");
+            String nro = sc.nextLine();
+            System.out.println("Fecha caducidad (MM/AA):");
+            String fecha = sc.nextLine();
+            System.out.println("CVV (3 digitos):");
+            String cvv = sc.nextLine();
 
-            boolean tarjetaOk = (nroTarjeta.length() == 16);
-            boolean cvvOk = (cvv.length() == 3);
-            boolean fechaEstructuraOk = (fechaVencimiento.length() == 5 && fechaVencimiento.contains("/"));
-            boolean fechaNoVencida = false;
+            boolean nroOk    = nro.length() == 16;
+            boolean cvvOk    = cvv.length() == 3;
+            boolean fechaFmt = fecha.length() == 5 && fecha.contains("/");
+            boolean fechaVig = false;
 
-            if (fechaEstructuraOk) {
+            if (fechaFmt) {
                 try {
-                    DateTimeFormatter formateador = DateTimeFormatter.ofPattern("MM/yy");
-                    YearMonth fechaTarjeta = YearMonth.parse(fechaVencimiento, formateador);
-                    YearMonth fechaActual = YearMonth.now();
-                    if (fechaTarjeta.isAfter(fechaActual) || fechaTarjeta.equals(fechaActual)) {
-                        fechaNoVencida = true;
-                    }
-                } catch (DateTimeParseException e) {
-                    fechaEstructuraOk = false;
-                }
+                    YearMonth ym = YearMonth.parse(fecha, DateTimeFormatter.ofPattern("MM/yy"));
+                    fechaVig = !ym.isBefore(YearMonth.now());
+                } catch (DateTimeParseException e) { fechaFmt = false; }
             }
 
-            if (tarjetaOk && fechaEstructuraOk && fechaNoVencida && cvvOk) {
-                System.out.println(" Autorizando fondos... transaccion exitosa");
-                pAprobado = true;
+            if (nroOk && cvvOk && fechaFmt && fechaVig) {
+                System.out.println("Autorizando fondos... transaccion exitosa.");
+                aprobado = true;
             } else {
-                System.out.println("Operación denegada por la pasarela bancaria");
-
-                if (!tarjetaOk) {
-                    System.out.println("El número de tarjeta debe contener exactamente  16 dígitos");
-                }
-                if (!fechaEstructuraOk) {
-                    System.out.println("Formato de fecha incorrecto");
-                }
-                if (fechaEstructuraOk && !fechaNoVencida) {
-                    System.out.println("Tarjeta caducada");
-                }
-                if (!cvvOk) {
-                    System.out.println("El CVV debe contener 3 dígitos");
-                }
-                System.out.println("Intente nuevamente el pago electrónico");
+                System.out.println("Operacion denegada:");
+                if (!nroOk)    System.out.println(" - Numero de tarjeta debe tener 16 digitos");
+                if (!fechaFmt) System.out.println(" - Formato de fecha incorrecto");
+                if (fechaFmt && !fechaVig) System.out.println(" - Tarjeta caducada");
+                if (!cvvOk)    System.out.println(" - CVV debe tener 3 digitos");
+                System.out.println("Intente nuevamente.");
             }
-
-        } while (!pAprobado);
+        } while (!aprobado);
     }
 
-    public static boolean pagarEnEfectivo(double totalAPagar, Scanner escaner) {
-        System.out.println("--- PAGO EN EFECTIVO ---");
-        System.out.println("Monto requerido: S/. " + totalAPagar);
-        System.out.println("Ingrese la cantidad de dinero con la que va a pagar: S/. ");
-        double efectivo = escaner.nextDouble();
-        escaner.nextLine();
-
-        if (efectivo < totalAPagar) {
-            System.out.println("[ERROR] El dinero ingresado es insuficiente.");
-            System.out.println("Cancelando transaccion y regresando al Menu Principal...");
+    public static boolean pagarEfectivo(double total) {
+        System.out.printf("Monto requerido: S/. %.2f%n", total);
+        System.out.println("Ingrese monto con el que paga: S/. ");
+        double pago = sc.nextDouble();
+        sc.nextLine();
+        if (pago < total) {
+            System.out.println("[ERROR] Monto insuficiente. Operacion cancelada.");
             return false;
-        } else {
-            double vuelto = efectivo - totalAPagar;
-            System.out.println("Pago aceptado. Su vuelto es: S/. " + vuelto);
-            return true;
+        }
+        System.out.printf("Pago aceptado. Vuelto: S/. %.2f%n", pago - total);
+        return true;
+    }
+
+    public static void generarBoleta(String correo, String nombre, String apellido,
+                                     String dni, String telefono, String producto, String color, int talla,
+                                     int cantidad, double total, String metodoPago, String tienda) {
+        double subtotal = total / 1.18;
+        double igv      = total - subtotal;
+        System.out.println("==================================================");
+        System.out.println("          BOLETA DE VENTA DIGITAL                 ");
+        System.out.println("      COMERCIAL FOOTLOOSE PERU S.A.C.             ");
+        System.out.println("           RUC: 20511378491                       ");
+        System.out.println("==================================================");
+        System.out.println("CLIENTE  : " + nombre + " " + apellido);
+        System.out.println("DNI      : " + dni + "     TELEFONO: " + telefono);
+        System.out.println("CORREO   : " + correo);
+        System.out.println("--------------------------------------------------");
+        System.out.println("TIENDA   : " + tienda);
+        System.out.println("--------------------------------------------------");
+        System.out.println("DETALLE DE COMPRA:");
+        System.out.println("Producto : " + producto);
+        System.out.println("Color    : " + color + " | Talla: " + talla);
+        System.out.println("Cantidad : " + cantidad + " pares");
+        System.out.println("--------------------------------------------------");
+        System.out.printf("Subtotal : S/. %.2f%n", subtotal);
+        System.out.printf("IGV (18%%): S/. %.2f%n", igv);
+        System.out.printf("TOTAL    : S/. %.2f%n", total);
+        System.out.println("PAGO     : " + metodoPago);
+        System.out.println("==================================================");
+        System.out.println("     Gracias por tu compra en Footloose!          ");
+        System.out.println("==================================================");
+    }
+
+    public static void menuAdminCRUD() {
+        int op = 0;
+        while (op != 5) {
+            System.out.println("===== PANEL DE ADMINISTRADOR =====");
+            System.out.println("1.- REGISTRAR producto");
+            System.out.println("2.- MODIFICAR producto");
+            System.out.println("3.- ELIMINAR producto");
+            System.out.println("4.- BUSCAR producto");
+            System.out.println("5.- VOLVER");
+            System.out.println("Seleccione:");
+            op = sc.nextInt();
+            sc.nextLine();
+            switch (op) {
+                case 1: crudCrear();    break;
+                case 2: crudModificar(); break;
+                case 3: crudEliminar(); break;
+                case 4: crudBuscar();   break;
+                case 5: break;
+                default: System.out.println("Opcion no valida."); break;
+            }
         }
     }
 
-    public static void generarBoleta(String correo, String nombre, String apellido, String dni, String telefono,
-                                     String producto, String color, int talla, int cantidad, double total,
-                                     String metodoPago, String tienda) {
+    static int elegirSeccion() {
+        System.out.println("1.- Seccion Varon   2.- Seccion Mujer");
+        int s = sc.nextInt();
+        sc.nextLine();
+        return s;
+    }
 
-        double subtotal = total / 1.18;
-        double igv = total - subtotal;
+    public static void crudCrear() {
+        System.out.println("--- REGISTRAR NUEVO PRODUCTO ---");
+        int sec = elegirSeccion();
+        ArrayList<String>  nombres = (sec == 1) ? nombresVaron : nombresMujer;
+        ArrayList<String>  colores = (sec == 1) ? coloresVaron : coloresMujer;
+        ArrayList<Integer> tallas  = (sec == 1) ? tallasVaron  : tallasMujer;
+        ArrayList<Double>  precios = (sec == 1) ? preciosVaron : preciosMujer;
+        ArrayList<Double>  descs   = (sec == 1) ? descVaron    : descMujer;
 
-        System.out.println("==================================================");
-        System.out.println("                BOLETA DE VENTA DIGITAL             ");
-        System.out.println("          COMERCIAL FOOTLOOSE PERU S.A.C.         ");
-        System.out.println("                RUC: 20511378491                  ");
-        System.out.println("==================================================");
-        System.out.println("CLIENTE: " + nombre + " " + apellido);
-        System.out.println("DNI: " + dni + "     TELEFONO: " + telefono);
-        System.out.println("CORREO: " + correo);
-        System.out.println("--------------------------------------------------");
-        System.out.println("LUGAR DE RECOJO: " + tienda);
-        System.out.println("--------------------------------------------------");
-        System.out.println("DETALLE DE COMPRA:");
-        System.out.println("Producto: " + producto);
-        System.out.println("Color: " + color + " | Talla: " + talla);
-        System.out.println("Cantidad: " + cantidad + " pares");
-        System.out.println("--------------------------------------------------");
-        System.out.println("Subtotal: S/. " + subtotal);
-        System.out.println();
-        System.out.println("IGV (18%%): S/. " + igv);
-        System.out.println();
-        System.out.println("TOTAL PAGADO: S/. " + total);
-        System.out.println();
-        System.out.println("METODO DE PAGO: " + metodoPago);
-        System.out.println("==================================================");
-        System.out.println("      Gracias por tu compra en Footloose!        ");
-        System.out.println("==================================================");
+        System.out.println("Nombre del producto:");
+        nombres.add(sc.nextLine());
+        System.out.println("Color:");
+        colores.add(sc.nextLine());
+        System.out.println("Talla:");
+        tallas.add(sc.nextInt()); sc.nextLine();
+        System.out.println("Precio:");
+        precios.add(sc.nextDouble()); sc.nextLine();
+        System.out.println("Descuento % para promo 'lleva 2' (0 = sin promo):");
+        descs.add(sc.nextDouble()); sc.nextLine();
+        System.out.println("Producto registrado correctamente.");
+    }
+
+    public static void crudModificar() {
+        System.out.println("--- MODIFICAR PRODUCTO ---");
+        int sec = elegirSeccion();
+        ArrayList<String>  nombres = (sec == 1) ? nombresVaron : nombresMujer;
+        ArrayList<String>  colores = (sec == 1) ? coloresVaron : coloresMujer;
+        ArrayList<Integer> tallas  = (sec == 1) ? tallasVaron  : tallasMujer;
+        ArrayList<Double>  precios = (sec == 1) ? preciosVaron : preciosMujer;
+        ArrayList<Double>  descs   = (sec == 1) ? descVaron    : descMujer;
+
+        imprimirCatalogo(nombres, colores, tallas, precios, descs);
+        System.out.println("Ingrese posicion a modificar (0-" + (nombres.size()-1) + "):");
+        int pos = sc.nextInt(); sc.nextLine();
+        if (pos < 0 || pos >= nombres.size()) { System.out.println("Posicion invalida."); return; }
+
+        System.out.println("Nuevo nombre:");
+        nombres.set(pos, sc.nextLine());
+        System.out.println("Nuevo color:");
+        colores.set(pos, sc.nextLine());
+        System.out.println("Nueva talla:");
+        tallas.set(pos, sc.nextInt()); sc.nextLine();
+        System.out.println("Nuevo precio:");
+        precios.set(pos, sc.nextDouble()); sc.nextLine();
+        System.out.println("Nuevo descuento % (0 = sin promo):");
+        descs.set(pos, sc.nextDouble()); sc.nextLine();
+        System.out.println("Producto actualizado correctamente.");
+    }
+
+    public static void crudEliminar() {
+        System.out.println("--- ELIMINAR PRODUCTO ---");
+        int sec = elegirSeccion();
+        ArrayList<String>  nombres = (sec == 1) ? nombresVaron : nombresMujer;
+        ArrayList<String>  colores = (sec == 1) ? coloresVaron : coloresMujer;
+        ArrayList<Integer> tallas  = (sec == 1) ? tallasVaron  : tallasMujer;
+        ArrayList<Double>  precios = (sec == 1) ? preciosVaron : preciosMujer;
+        ArrayList<Double>  descs   = (sec == 1) ? descVaron    : descMujer;
+
+        imprimirCatalogo(nombres, colores, tallas, precios, descs);
+        System.out.println("Ingrese posicion a eliminar (0-" + (nombres.size()-1) + "):");
+        int pos = sc.nextInt(); sc.nextLine();
+        if (pos < 0 || pos >= nombres.size()) { System.out.println("Posicion invalida."); return; }
+
+        System.out.println("Eliminado: " + nombres.get(pos));
+        nombres.remove(pos);
+        colores.remove(pos);
+        tallas.remove(pos);
+        precios.remove(pos);
+        descs.remove(pos);
+        System.out.println("Producto eliminado correctamente.");
+    }
+
+    public static void crudBuscar() {
+        System.out.println("--- BUSCAR PRODUCTO ---");
+        System.out.println("Ingrese nombre a buscar:");
+        String buscar = sc.nextLine();
+
+        boolean encontrado = false;
+        int idxV = nombresVaron.indexOf(buscar);
+        int idxM = nombresMujer.indexOf(buscar);
+
+        if (idxV >= 0) {
+            encontrado = true;
+            System.out.println("Encontrado en VARON (pos " + idxV + "):");
+            System.out.printf("  %s | %s | T%d | S/. %.2f | Desc: %.0f%%%n",
+                    nombresVaron.get(idxV), coloresVaron.get(idxV), tallasVaron.get(idxV),
+                    preciosVaron.get(idxV), descVaron.get(idxV));
+        }
+        if (idxM >= 0) {
+            encontrado = true;
+            System.out.println("Encontrado en MUJER (pos " + idxM + "):");
+            System.out.printf("  %s | %s | T%d | S/. %.2f | Desc: %.0f%%%n",
+                    nombresMujer.get(idxM), coloresMujer.get(idxM), tallasMujer.get(idxM),
+                    preciosMujer.get(idxM), descMujer.get(idxM));
+        }
+        if (!encontrado) {
+            System.out.println("Producto no encontrado en el catalogo.");
+        }
+    }
+
+    static void imprimirCatalogo(ArrayList<String> nombres, ArrayList<String> colores,
+                                 ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
+        for (int i = 0; i < nombres.size(); i++) {
+            System.out.printf(" %2d  %-35s | %-18s | T%d | S/. %.2f | Desc: %.0f%%%n",
+                    i, nombres.get(i), colores.get(i), tallas.get(i), precios.get(i), descs.get(i));
+        }
     }
 }
+
