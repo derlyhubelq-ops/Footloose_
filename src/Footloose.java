@@ -3,6 +3,9 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
 
 public class Footloose {
 
@@ -24,7 +27,7 @@ public class Footloose {
     static String usuarioActivo  = "invitado";
     static boolean sesionIniciada = false;
     static boolean esAdmin        = false;
-    
+
     static Scanner escaner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -129,7 +132,8 @@ public class Footloose {
         }
         escaner.close();
     }
-public static void iniciarSesion() {
+
+    public static void iniciarSesion() {
         System.out.println("------ INICIAR SESION ------");
         boolean ok = false;
         do {
@@ -214,8 +218,8 @@ public static void iniciarSesion() {
     }
 
     public static void menuCatalogo() {
-        boolean volver = false;
-        while (!volver) {
+        boolean volverMenuPrincipal = false;
+        while (!volverMenuPrincipal) {
             System.out.println("==========================================");
             System.out.println("            CATALOGO FOOTLOOSE            ");
             System.out.println("==========================================");
@@ -227,7 +231,7 @@ public static void iniciarSesion() {
             escaner.nextLine();
 
             if (op == 3) {
-                volver = true;
+                volverMenuPrincipal = true;
                 usuarioActivo = "invitado";
                 sesionIniciada = false;
                 esAdmin = false;
@@ -239,56 +243,99 @@ public static void iniciarSesion() {
                 ArrayList<Double> descs = (op == 1) ? descVaron : descMujer;
                 String seccion = (op == 1) ? "VARON" : "MUJER";
 
-                System.out.println("------ PRODUCTOS " + seccion + " ------");
-                imprimirCatalogo(nombres, colores, tallas, precios, descs);
 
-                System.out.println("Elija el numero de producto (1-" + nombres.size() + "):");
-                int prod = escaner.nextInt();
-                escaner.nextLine();
-                if (prod >= 1 && prod <= nombres.size()) {
-                    int idx = prod - 1;
-                    System.out.println("Ingrese la cantidad de pares que desea llevar:");
-                    int cantidad = escaner.nextInt();
-                    escaner.nextLine();
-                    if (cantidad > 0) {
-                        double precio = precios.get(idx);
-                        double desc = descs.get(idx);
-                        double total;
-                        if (desc > 0 && cantidad >= 2) {
-                            double factor = 1.0 - (desc / 100.0);
-                            total = (precio * 2 * factor) + (precio * (cantidad - 2));
-                            System.out.println("[PROMO] Se aplico " + (int)desc + "% descuento en los 2 primeros pares.");
-                        } else {
-                            total = precio * cantidad;
-                        }
-                        System.out.printf("Total a pagar: S/. %.2f%n", total);
-                        System.out.println("------ REGISTRO DE CLIENTE ------");
-                        System.out.println("Nombre:");
-                        String nombre = escaner.nextLine();
-                        System.out.println("Apellido:");
-                        String apellido = escaner.nextLine();
-                        String dni = pedirCampoLongitud("DNI (8 digitos)", 8);
-                        if (!dni.equals("CANCELADO")) {
-                            String telefono = pedirCampoLongitud("Telefono/Celular (9 digitos)", 9);
-                            if (!telefono.equals("CANCELADO")) {
-                                String tienda = seleccionarTienda();
-                                String[] correoArr = {"No requerido (Pago en Efectivo)"};
-                                String metodoPago = procesarFlujoPago(total, correoArr);
-                                if (!metodoPago.isEmpty()) {
-                                    generarBoleta(correoArr[0], nombre, apellido, dni, telefono, nombres.get(idx), colores.get(idx), tallas.get(idx), cantidad, total, metodoPago, tienda);
-                                    volver = true;
-                                }
-                            }
-                        }
-                    } else {
-                        System.out.println("Cantidad invalida.");
-                    }
+                menuBusqueda(nombres, colores, tallas, precios, descs, seccion);
+            } else {
+                System.out.println("Opcion invalida.");
+            }
+        }
+    }
+    static void menuBusqueda(ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs, String seccion) {
+        boolean enMenuBusqueda = true;
+        while (enMenuBusqueda) {
+            System.out.println("  --- OPCIONES DE BUSQUEDA EN " + seccion + " ---");
+            System.out.println("1.- Ver todos los productos");
+            System.out.println("2.- Ver solo promociones");
+            System.out.println("3.- Ordenar por precio (MAYOR a MENOR)");
+            System.out.println("4.- Ordenar por precio (MENOR a MAYOR)");
+            System.out.println("5.- REGRESAR A SELECCION DE GENERO");
+            System.out.println("Seleccione una opcion:");
+            int op = escaner.nextInt();
+            escaner.nextLine();
+
+            if (op == 5) {
+                enMenuBusqueda = false;
+            } else if (op >= 1 && op <= 4) {
+                ArrayList<Integer> indices = new ArrayList<>();
+                for (int i = 0; i < nombres.size(); i++) indices.add(i);
+
+                switch (op) {
+                    case 2: indices.removeIf(i -> descs.get(i) <= 0); break;
+                    case 3: indices.sort((a, b) -> Double.compare(precios.get(b), precios.get(a))); break;
+                    case 4: indices.sort((a, b) -> Double.compare(precios.get(a), precios.get(b))); break;
+                }
+
+                if (indices.isEmpty()) {
+                    System.out.println("No se encontraron productos con ese criterio.");
                 } else {
-                    System.out.println("Producto no existente.");
+                    System.out.println("------ PRODUCTOS " + seccion + " ------");
+                    imprimirCatalogoFiltrado(indices, nombres, colores, tallas, precios, descs);
+
+                    System.out.println("¿Desea comprar un producto de esta lista? (1-" + indices.size() + " o 0 para volver):");
+                    int prod = escaner.nextInt();
+                    escaner.nextLine();
+                    if (prod >= 1 && prod <= indices.size()) {
+                        int idx = indices.get(prod - 1);
+                        procesarCompra(idx, nombres, colores, tallas, precios, descs);
+                    }
                 }
             } else {
                 System.out.println("Opcion invalida.");
             }
+        }
+    }
+
+    static void procesarCompra(int idx, ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
+        System.out.println("Ingrese la cantidad de pares que desea llevar:");
+        int cantidad = escaner.nextInt();
+        escaner.nextLine();
+        if (cantidad > 0) {
+            double precio = precios.get(idx);
+            double desc = descs.get(idx);
+            double total;
+            if (desc > 0 && cantidad >= 2) {
+                double factor = 1.0 - (desc / 100.0);
+                total = (precio * 2 * factor) + (precio * (cantidad - 2));
+                System.out.println("[PROMO] Se aplico " + (int)desc + "% descuento en los 2 primeros pares.");
+            } else {
+                total = precio * cantidad;
+            }
+            System.out.printf("Total a pagar: S/. %.2f%n", total);
+            System.out.println("------ REGISTRO DE CLIENTE ------");
+            System.out.println("Nombre:");
+            String nombre = escaner.nextLine();
+            System.out.println("Apellido:");
+            String apellido = escaner.nextLine();
+            String dni = pedirCampoLongitud("DNI (8 digitos)", 8);
+            if (!dni.equals("CANCELADO")) {
+                String telefono = pedirCampoLongitud("Telefono/Celular (9 digitos)", 9);
+                if (!telefono.equals("CANCELADO")) {
+                    String tienda = seleccionarTienda();
+                    String[] correoArr = {"No requerido (Pago en Efectivo)"};
+                    String metodoPago = procesarFlujoPago(total, correoArr);
+                    if (!metodoPago.isEmpty()) {
+                        generarBoleta(correoArr[0], nombre, apellido, dni, telefono, nombres.get(idx), colores.get(idx), tallas.get(idx), cantidad, total, metodoPago, tienda);
+                    }
+                }
+            }
+        }
+    }
+
+    static void imprimirCatalogoFiltrado(ArrayList<Integer> indices, ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
+        for (int pos = 0; pos < indices.size(); pos++) {
+            int i = indices.get(pos);
+            String promo = descs.get(i) > 0 ? " [Lleva 2 y obtén " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
+            System.out.printf("%2d. %-35s | %-18s | T%d | S/. %.2f%s%n", pos + 1, nombres.get(i), colores.get(i), tallas.get(i), precios.get(i), promo);
         }
     }
 
@@ -415,29 +462,43 @@ public static void iniciarSesion() {
     public static void generarBoleta(String correo, String nombre, String apellido, String dni, String telefono, String producto, String color, int talla, int cantidad, double total, String metodoPago, String tienda) {
         double subtotal = total / 1.18;
         double igv = total - subtotal;
-        System.out.println("==================================================");
-        System.out.println("          BOLETA DE VENTA DIGITAL                 ");
-        System.out.println("      COMERCIAL FOOTLOOSE PERU S.A.C.             ");
-        System.out.println("         RUC: 20511378491                         ");
-        System.out.println("==================================================");
-        System.out.println("CLIENTE  : " + nombre + " " + apellido);
-        System.out.println("DNI      : " + dni + "     TELEFONO: " + telefono);
-        System.out.println("CORREO   : " + correo);
-        System.out.println("--------------------------------------------------");
-        System.out.println("TIENDA   : " + tienda);
-        System.out.println("--------------------------------------------------");
-        System.out.println("DETALLE DE COMPRA:");
-        System.out.println("Producto : " + producto);
-        System.out.println("Color    : " + color + " | Talla: " + talla);
-        System.out.println("Cantidad : " + cantidad + " pares");
-        System.out.println("--------------------------------------------------");
-        System.out.printf("Subtotal : S/. %.2f%n", subtotal);
-        System.out.printf("IGV (18%%): S/. %.2f%n", igv);
-        System.out.printf("TOTAL    : S/. %.2f%n", total);
-        System.out.println("PAGO     : " + metodoPago);
-        System.out.println("==================================================");
-        System.out.println("     Gracias por tu compra en Footloose!          ");
-        System.out.println("==================================================");
+        StringBuilder boleta = new StringBuilder();
+        boleta.append("==================================================\n");
+        boleta.append("          BOLETA DE VENTA DIGITAL                 \n");
+        boleta.append("      COMERCIAL FOOTLOOSE PERU S.A.C.             \n");
+        boleta.append("         RUC: 20511378491                         \n");
+        boleta.append("==================================================\n");
+        boleta.append("CLIENTE  : " + nombre + " " + apellido + "\n");
+        boleta.append("DNI      : " + dni + "     TELEFONO: " + telefono + "\n");
+        boleta.append("CORREO   : " + correo + "\n");
+        boleta.append("--------------------------------------------------\n");
+        boleta.append("TIENDA   : " + tienda + "\n");
+        boleta.append("--------------------------------------------------\n");
+        boleta.append("DETALLE DE COMPRA:\n");
+        boleta.append("Producto : " + producto + "\n");
+        boleta.append("Color    : " + color + " | Talla: " + talla + "\n");
+        boleta.append("Cantidad : " + cantidad + " pares\n");
+        boleta.append("--------------------------------------------------\n");
+        boleta.append(String.format("Subtotal : S/. %.2f%n", subtotal));
+        boleta.append(String.format("IGV (18%%): S/. %.2f%n", igv));
+        boleta.append(String.format("TOTAL    : S/. %.2f%n", total));
+        boleta.append("PAGO     : " + metodoPago + "\n");
+        boleta.append("==================================================\n");
+        boleta.append("     Gracias por tu compra en Footloose!          \n");
+        boleta.append("==================================================\n");
+
+        System.out.print(boleta);
+        exportarBoleta(boleta.toString(), dni);
+    }
+
+    public static void exportarBoleta(String contenido, String dni) {
+        String ruta = "D:\\boleta_" + dni + ".txt";
+        try (FileWriter escritor = new FileWriter(ruta)) {
+            escritor.write(contenido);
+            System.out.println("Su boleta fue exportada exitosamente en : " + ruta);
+        } catch (IOException e) {
+            System.out.println("Error en la exportación de la boleta");
+        }
     }
 
     public static void menuAdminCRUD() {
@@ -449,6 +510,7 @@ public static void iniciarSesion() {
             System.out.println("3.- ELIMINAR producto");
             System.out.println("4.- BUSCAR producto");
             System.out.println("5.- VOLVER");
+            System.out.println("6.- SIMULADOR AUTOMATICO (Random)");
             System.out.println("Seleccione:");
             op = escaner.nextInt();
             escaner.nextLine();
@@ -457,7 +519,8 @@ public static void iniciarSesion() {
                 case 2: crudModificar(); break;
                 case 3: crudEliminar(); break;
                 case 4: crudBuscar(); break;
-                case 5: break;
+                case 5: op = 5; break;
+                case 6: subMenuSimuladorRandom(); break;
                 default: System.out.println("Opcion no valida."); break;
             }
         }
@@ -536,13 +599,13 @@ public static void iniciarSesion() {
         descs.remove(pos);
         System.out.println("Producto eliminado correctamente.");
     }
-    
+
     public static void crudBuscar() {
         System.out.println("--- BUSCAR PRODUCTO ---");
         System.out.println("Ingrese nombre a buscar:");
         String buscar = escaner.nextLine().toLowerCase();
         boolean encontrado = false;
-        
+
         for (int i = 0; i < nombresVaron.size(); i++) {
             if (nombresVaron.get(i).toLowerCase().contains(buscar)) {
                 encontrado = true;
@@ -564,5 +627,112 @@ public static void iniciarSesion() {
         if (!encontrado) {
             System.out.println("Producto no encontrado en el catalogo.");
         }
+    }
+
+    public static void subMenuSimuladorRandom() {
+        System.out.println("--- SELECCIONE ENFOQUE DEL SIMULADOR ---");
+        System.out.println("1.- Simulador GLOBAL (Combina Varon y Mujer)");
+        System.out.println("2.- Simulador por GÉNERO específico");
+        int op = escaner.nextInt(); escaner.nextLine();
+
+        if (op == 1) {
+            ejecutarPruebasAutomatizadas(true, 0);
+        } else if (op == 2) {
+            int sec = elegirSeccion();
+            ejecutarPruebasAutomatizadas(false, sec);
+        } else {
+            System.out.println("Opción incorrecta.");
+        }
+    }
+
+    public static void ejecutarPruebasAutomatizadas(boolean esGlobal, int seccionElegida) {
+        Random rand = new Random();
+        String[] coloresTest = {"negro", "blanco", "gris", "azul", "marron"};
+
+        System.out.println("========== INICIANDO ESCENARIOS DE PRUEBA AUTOMATICOS ==========");
+
+        for (int i = 1; i <= 10; i++) {
+            System.out.println("--------------------------------------------------");
+            System.out.println("SIMULACION DE BUSQUEDA NRO: " + i);
+            System.out.println("--------------------------------------------------");
+
+            ArrayList<String> nombres;
+            ArrayList<String> colores;
+            ArrayList<Double> precios;
+            ArrayList<Double> descs;
+            String textoSeccion;
+
+            if (esGlobal) {
+                if (rand.nextBoolean()) {
+                    nombres = nombresVaron; colores = coloresVaron; precios = preciosVaron; descs = descVaron;
+                    textoSeccion = "GLOBAL -> VARON";
+                } else {
+                    nombres = nombresMujer; colores = coloresMujer; precios = preciosMujer; descs = descMujer;
+                    textoSeccion = "GLOBAL -> MUJER";
+                }
+            } else {
+                if (seccionElegida == 1) {
+                    nombres = nombresVaron; colores = coloresVaron; precios = preciosVaron; descs = descVaron;
+                    textoSeccion = "EXCLUSIVO -> VARON";
+                } else {
+                    nombres = nombresMujer; colores = coloresMujer; precios = preciosMujer; descs = descMujer;
+                    textoSeccion = "EXCLUSIVO -> MUJER";
+                }
+            }
+
+            int tipoBusqueda = rand.nextInt(4);
+
+            switch (tipoBusqueda) {
+                case 0:
+                    System.out.println("[" + textoSeccion + "] Ordenar por precio (MAYOR a MENOR)");
+                    ArrayList<Integer> indMayor = new ArrayList<>();
+                    for (int j = 0; j < nombres.size(); j++) indMayor.add(j);
+                    indMayor.sort((a, b) -> Double.compare(precios.get(b), precios.get(a)));
+
+                    for (int k = 0; k < Math.min(3, indMayor.size()); k++) {
+                        int idx = indMayor.get(k);
+                        System.out.printf("  Top %d: %s | S/. %.2f%n", k+1, nombres.get(idx), precios.get(idx));
+                    }
+                    break;
+
+                case 1:
+                    System.out.println("[" + textoSeccion + "] Ordenar por precio (MENOR a MAYOR)");
+                    ArrayList<Integer> indMenor = new ArrayList<>();
+                    for (int j = 0; j < nombres.size(); j++) indMenor.add(j);
+                    indMenor.sort((a, b) -> Double.compare(precios.get(a), precios.get(b)));
+
+                    for (int k = 0; k < Math.min(3, indMenor.size()); k++) {
+                        int idx = indMenor.get(k);
+                        System.out.printf("  Economico %d: %s | S/. %.2f%n", k+1, nombres.get(idx), precios.get(idx));
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("[" + textoSeccion + "] Buscando calzados con descuento activo");
+                    boolean huboDescuento = false;
+                    for (int j = 0; j < nombres.size(); j++) {
+                        if (descs.get(j) > 0) {
+                            System.out.printf("  ¡Oferta! -> %s | Desc: %.0f%%%n", nombres.get(j), descs.get(j));
+                            huboDescuento = true;
+                        }
+                    }
+                    if (!huboDescuento) System.out.println("  No se encontraron descuentos.");
+                    break;
+
+                case 3:
+                    String colorBuscado = coloresTest[rand.nextInt(coloresTest.length)];
+                    System.out.println("[" + textoSeccion + "] Buscando el color: " + colorBuscado);
+                    boolean huboColor = false;
+                    for (int j = 0; j < nombres.size(); j++) {
+                        if (colores.get(j).toLowerCase().contains(colorBuscado)) {
+                            System.out.printf("  Coincidencia -> %s | Color: %s%n", nombres.get(j), colores.get(j));
+                            huboColor = true;
+                        }
+                    }
+                    if (!huboColor) System.out.println("  Sin resultados para " + colorBuscado);
+                    break;
+            }
+        }
+        System.out.println("==================================================");
     }
 }
