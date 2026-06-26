@@ -98,8 +98,10 @@ public class Footloose {
             System.out.println("1.- Iniciar Sesion");
             System.out.println("2.- Registrarse");
             System.out.println("3.- Entrar como Invitado");
+            System.out.println("4.- Libro de Reclamaciones");
+            System.out.println("5.- Consultar Reclamo");
             if (esAdmin) {
-                System.out.println("4.- PANEL DE ADMINISTRADOR");
+                System.out.println("6.- PANEL DE ADMINISTRADOR");
             }
             System.out.println("Seleccione una opcion:");
             int op = escaner.nextInt();
@@ -122,6 +124,12 @@ public class Footloose {
                     menuCatalogo();
                     break;
                 case 4:
+                    libroReclamaciones();
+                    break;
+                case 5:
+                    consultarReclamo();
+                    break;
+                case 6:
                     if (esAdmin) menuAdminCRUD();
                     else System.out.println("Opcion no valida.");
                     break;
@@ -429,7 +437,9 @@ public class Footloose {
                 try {
                     YearMonth ym = YearMonth.parse(fecha, DateTimeFormatter.ofPattern("MM/yy"));
                     fechaVig = !ym.isBefore(YearMonth.now());
-                } catch (DateTimeParseException e) { fechaFmt = false; }
+                } catch (DateTimeParseException e) {
+                    fechaFmt = false;
+                }
             }
             if (nroOk && cvvOk && fechaFmt && fechaVig) {
                 System.out.println("Autorizando fondos... transaccion exitosa.");
@@ -745,5 +755,111 @@ public class Footloose {
             }
         }
         System.out.println("==================================================");
+    }
+
+    public static String seleccionarTiendaReclamo() {
+        System.out.println("--- TIENDA RELACIONADA CON EL RECLAMO ---");
+        System.out.println("1. Real Plaza Juliaca (Av. Nueva Zelanda)");
+        System.out.println("2. Jiron Huancane (Centro de Juliaca)");
+        System.out.println("3. Real Plaza Arequipa (Av. Ejercito)");
+        System.out.println("4. Mall Plaza Bellavista (Callao - Lima)");
+        System.out.println("5. Plaza Norte (Independencia - Lima)");
+        System.out.println("6. Compra por Internet");
+        System.out.println("Seleccione (1-6):");
+
+        int op = escaner.nextInt();
+        escaner.nextLine();
+
+        switch (op) {
+            case 1: return "Real Plaza Juliaca (Puno)";
+            case 2: return "Jiron Huancane (Juliaca - Puno)";
+            case 3: return "Real Plaza Arequipa (Arequipa)";
+            case 4: return "Mall Plaza Bellavista (Callao)";
+            case 5: return "Plaza Norte (Independencia - Lima)";
+            case 6: return "Compra por Internet";
+            default: return "No especificada";
+        }
+    }
+
+    public static void libroReclamaciones() {
+
+        System.out.println("====================================");
+        System.out.println("      LIBRO DE RECLAMACIONES");
+        System.out.println("          FOOTLOOSE");
+        System.out.println("====================================");
+
+        String dni = pedirCampoLongitud("DNI del cliente (8 digitos)", 8);
+
+        if (dni.equals("CANCELADO")) {
+            return;
+        }
+
+        String tienda = seleccionarTiendaReclamo();
+
+        System.out.println("Ingrese producto o servicio:");
+        String producto = escaner.nextLine();
+
+        System.out.println("Ingrese motivo del reclamo:");
+        String reclamo = escaner.nextLine();
+
+        String ruta = "D:\\reclamo_" + dni + ".txt";
+
+        try (FileWriter escritor = new FileWriter(ruta)) {
+
+            escritor.write("====================================\n");
+            escritor.write("     LIBRO DE RECLAMACIONES\n");
+            escritor.write("          FOOTLOOSE\n");
+            escritor.write("====================================\n");
+            escritor.write("DNI: " + dni + "\n");
+            escritor.write("Tienda: " + tienda + "\n");
+            escritor.write("Producto/Servicio: " + producto + "\n");
+            escritor.write("Detalle del reclamo:\n");
+            escritor.write(reclamo + "\n");
+            escritor.write("------------------------------------\n");
+            escritor.write("Estado: Reclamo recibido\n");
+            escritor.write("Tiempo de respuesta: 15 dias habiles\n");
+            escritor.write("====================================\n");
+
+            System.out.println("Reclamo guardado correctamente.");
+            System.out.println("Archivo creado: " + ruta);
+
+        } catch (IOException e) {
+            System.out.println("Error al guardar el reclamo.");
+        }
+    }
+
+    public static void consultarReclamo() {
+
+        System.out.println("================================");
+        System.out.println("       CONSULTAR RECLAMO");
+        System.out.println("================================");
+
+        String dni = pedirCampoLongitud("Ingrese DNI", 8);
+
+        if (dni.equals("CANCELADO")) {
+            return;
+        }
+
+        String ruta = "D:\\reclamo_" + dni + ".txt";
+        java.io.File archivo = new java.io.File(ruta);
+
+        if (archivo.exists()) {
+
+            try {
+                Scanner lector = new Scanner(archivo);
+
+                while (lector.hasNextLine()) {
+                    System.out.println(lector.nextLine());
+                }
+
+                lector.close();
+
+            } catch (IOException e) {
+                System.out.println("Error leyendo reclamo.");
+            }
+
+        } else {
+            System.out.println("No existe un reclamo con ese DNI.");
+        }
     }
 }
