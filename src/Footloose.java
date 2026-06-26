@@ -141,7 +141,7 @@ public class Footloose {
             String correo = escaner.nextLine();
             if (correo.equals("0")) return;
 
-            System.out.println("Contraseña :");
+            System.out.println("Contrasena:");
             String pass = escaner.nextLine();
 
             if (correo.equals("admin@footloose.com") && pass.equals("admin123")) {
@@ -242,14 +242,13 @@ public class Footloose {
                 ArrayList<Double> precios = (op == 1) ? preciosVaron : preciosMujer;
                 ArrayList<Double> descs = (op == 1) ? descVaron : descMujer;
                 String seccion = (op == 1) ? "VARON" : "MUJER";
-
-
                 menuBusqueda(nombres, colores, tallas, precios, descs, seccion);
             } else {
                 System.out.println("Opcion invalida.");
             }
         }
     }
+
     static void menuBusqueda(ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs, String seccion) {
         boolean enMenuBusqueda = true;
         while (enMenuBusqueda) {
@@ -281,7 +280,7 @@ public class Footloose {
                     System.out.println("------ PRODUCTOS " + seccion + " ------");
                     imprimirCatalogoFiltrado(indices, nombres, colores, tallas, precios, descs);
 
-                    System.out.println("¿Desea comprar un producto de esta lista? (1-" + indices.size() + " o 0 para volver):");
+                    System.out.println("Desea comprar un producto de esta lista? (1-" + indices.size() + " o 0 para volver):");
                     int prod = escaner.nextInt();
                     escaner.nextLine();
                     if (prod >= 1 && prod <= indices.size()) {
@@ -334,13 +333,13 @@ public class Footloose {
     static void imprimirCatalogoFiltrado(ArrayList<Integer> indices, ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
         for (int pos = 0; pos < indices.size(); pos++) {
             int i = indices.get(pos);
-            String promo = descs.get(i) > 0 ? " [Lleva 2 y obtén " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
+            String promo = descs.get(i) > 0 ? " [Lleva 2 y obten " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
             System.out.printf("%2d. %-35s | %-18s | T%d | S/. %.2f%s%n", pos + 1, nombres.get(i), colores.get(i), tallas.get(i), precios.get(i), promo);
         }
     }
 
     static void imprimirProducto(int i, ArrayList<String> nombres, ArrayList<String> colores, ArrayList<Integer> tallas, ArrayList<Double> precios, ArrayList<Double> descs) {
-        String promo = descs.get(i) > 0 ? " [Lleva 2 y obtén " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
+        String promo = descs.get(i) > 0 ? " [Lleva 2 y obten " + (int)descs.get(i).doubleValue() + "% desc.]" : "";
         System.out.printf("%2d. %-35s | %-18s | T%d | S/. %.2f%s%n", i + 1, nombres.get(i), colores.get(i), tallas.get(i), precios.get(i), promo);
     }
 
@@ -448,7 +447,7 @@ public class Footloose {
 
     public static boolean pagarEfectivo(double total) {
         System.out.printf("Monto requerido: S/. %.2f%n", total);
-        System.out.println("Ingrese monto con el que paga: S/. ");
+        System.out.println("Ingrese monto con el que paga: S/.");
         double pago = escaner.nextDouble();
         escaner.nextLine();
         if (pago < total) {
@@ -462,42 +461,56 @@ public class Footloose {
     public static void generarBoleta(String correo, String nombre, String apellido, String dni, String telefono, String producto, String color, int talla, int cantidad, double total, String metodoPago, String tienda) {
         double subtotal = total / 1.18;
         double igv = total - subtotal;
-        StringBuilder boleta = new StringBuilder();
-        boleta.append("==================================================\n");
-        boleta.append("          BOLETA DE VENTA DIGITAL                 \n");
-        boleta.append("      COMERCIAL FOOTLOOSE PERU S.A.C.             \n");
-        boleta.append("         RUC: 20511378491                         \n");
-        boleta.append("==================================================\n");
-        boleta.append("CLIENTE  : " + nombre + " " + apellido + "\n");
-        boleta.append("DNI      : " + dni + "     TELEFONO: " + telefono + "\n");
-        boleta.append("CORREO   : " + correo + "\n");
-        boleta.append("--------------------------------------------------\n");
-        boleta.append("TIENDA   : " + tienda + "\n");
-        boleta.append("--------------------------------------------------\n");
-        boleta.append("DETALLE DE COMPRA:\n");
-        boleta.append("Producto : " + producto + "\n");
-        boleta.append("Color    : " + color + " | Talla: " + talla + "\n");
-        boleta.append("Cantidad : " + cantidad + " pares\n");
-        boleta.append("--------------------------------------------------\n");
-        boleta.append(String.format("Subtotal : S/. %.2f%n", subtotal));
-        boleta.append(String.format("IGV (18%%): S/. %.2f%n", igv));
-        boleta.append(String.format("TOTAL    : S/. %.2f%n", total));
-        boleta.append("PAGO     : " + metodoPago + "\n");
-        boleta.append("==================================================\n");
-        boleta.append("     Gracias por tu compra en Footloose!          \n");
-        boleta.append("==================================================\n");
 
-        System.out.print(boleta);
-        exportarBoleta(boleta.toString(), dni);
+        String boleta = "";
+
+        boleta = boleta + "====================================\n";
+        boleta = boleta + "       BOLETA DE VENTA FOOTLOOSE\n";
+        boleta = boleta + "====================================\n";
+        boleta = boleta + "Cliente: " + nombre + " " + apellido + "\n";
+        boleta = boleta + "DNI: " + dni + "\n";
+        boleta = boleta + "Telefono: " + telefono + "\n";
+        boleta = boleta + "Correo: " + correo + "\n";
+        boleta = boleta + "------------------------------------\n";
+        boleta = boleta + "Tienda: " + tienda + "\n";
+        boleta = boleta + "------------------------------------\n";
+        boleta = boleta + "Producto: " + producto + "\n";
+        boleta = boleta + "Color: " + color + "\n";
+        boleta = boleta + "Talla: " + talla + "\n";
+        boleta = boleta + "Cantidad: " + cantidad + " pares\n";
+        boleta = boleta + "------------------------------------\n";
+        boleta = boleta + "Subtotal: S/. " + subtotal + "\n";
+        boleta = boleta + "IGV: S/. " + igv + "\n";
+        boleta = boleta + "Total: S/. " + total + "\n";
+        boleta = boleta + "Metodo de pago: " + metodoPago + "\n";
+        boleta = boleta + "====================================\n";
+        boleta = boleta + "Gracias por su compra\n";
+        boleta = boleta + "====================================\n";
+
+        System.out.println(boleta);
+
+        exportarBoleta(boleta, dni);
     }
 
     public static void exportarBoleta(String contenido, String dni) {
         String ruta = "D:\\boleta_" + dni + ".txt";
-        try (FileWriter escritor = new FileWriter(ruta)) {
+        FileWriter escritor = null;
+
+        try {
+            escritor = new FileWriter(ruta);
             escritor.write(contenido);
-            System.out.println("Su boleta fue exportada exitosamente en : " + ruta);
+            System.out.println("Su boleta fue exportada exitosamente en: " + ruta);
         } catch (IOException e) {
-            System.out.println("Error en la exportación de la boleta");
+            e.printStackTrace();
+            System.out.println("Error en la exportacion de la boleta");
+        } finally {
+            if (escritor != null) {
+                try {
+                    escritor.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -540,7 +553,7 @@ public class Footloose {
         ArrayList<String> colores = (sec == 1) ? coloresVaron : coloresMujer;
         ArrayList<Integer> tallas = (sec == 1) ? tallasVaron : tallasMujer;
         ArrayList<Double> precios = (sec == 1) ? preciosVaron : preciosMujer;
-        ArrayList<Double> descs = (sec == 1) ? descVaron : descMujer;
+        ArrayList<Double> descs   = (sec == 1) ? descVaron    : descMujer;
         System.out.println("Nombre del producto:");
         nombres.add(escaner.nextLine());
         System.out.println("Color:");
@@ -559,9 +572,9 @@ public class Footloose {
         int sec = elegirSeccion();
         ArrayList<String> nombres = (sec == 1) ? nombresVaron : nombresMujer;
         ArrayList<String> colores = (sec == 1) ? coloresVaron : coloresMujer;
-        ArrayList<Integer> tallas = (sec == 1) ? tallasVaron : tallasMujer;
+        ArrayList<Integer> tallas = (sec == 1) ? tallasVaron  : tallasMujer;
         ArrayList<Double> precios = (sec == 1) ? preciosVaron : preciosMujer;
-        ArrayList<Double> descs = (sec == 1) ? descVaron : descMujer;
+        ArrayList<Double> descs   = (sec == 1) ? descVaron    : descMujer;
         imprimirCatalogo(nombres, colores, tallas, precios, descs);
         System.out.println("Ingrese posicion a modificar (0-" + (nombres.size()-1) + "):");
         int pos = escaner.nextInt(); escaner.nextLine();
@@ -584,9 +597,9 @@ public class Footloose {
         int sec = elegirSeccion();
         ArrayList<String> nombres = (sec == 1) ? nombresVaron : nombresMujer;
         ArrayList<String> colores = (sec == 1) ? coloresVaron : coloresMujer;
-        ArrayList<Integer> tallas = (sec == 1) ? tallasVaron : tallasMujer;
+        ArrayList<Integer> tallas = (sec == 1) ? tallasVaron  : tallasMujer;
         ArrayList<Double> precios = (sec == 1) ? preciosVaron : preciosMujer;
-        ArrayList<Double> descs = (sec == 1) ? descVaron : descMujer;
+        ArrayList<Double> descs   = (sec == 1) ? descVaron    : descMujer;
         imprimirCatalogo(nombres, colores, tallas, precios, descs);
         System.out.println("Ingrese posicion a eliminar (0-" + (nombres.size()-1) + "):");
         int pos = escaner.nextInt(); escaner.nextLine();
@@ -632,7 +645,7 @@ public class Footloose {
     public static void subMenuSimuladorRandom() {
         System.out.println("--- SELECCIONE ENFOQUE DEL SIMULADOR ---");
         System.out.println("1.- Simulador GLOBAL (Combina Varon y Mujer)");
-        System.out.println("2.- Simulador por GÉNERO específico");
+        System.out.println("2.- Simulador por GENERO especifico");
         int op = escaner.nextInt(); escaner.nextLine();
 
         if (op == 1) {
@@ -641,7 +654,7 @@ public class Footloose {
             int sec = elegirSeccion();
             ejecutarPruebasAutomatizadas(false, sec);
         } else {
-            System.out.println("Opción incorrecta.");
+            System.out.println("Opcion incorrecta.");
         }
     }
 
@@ -688,7 +701,6 @@ public class Footloose {
                     ArrayList<Integer> indMayor = new ArrayList<>();
                     for (int j = 0; j < nombres.size(); j++) indMayor.add(j);
                     indMayor.sort((a, b) -> Double.compare(precios.get(b), precios.get(a)));
-
                     for (int k = 0; k < Math.min(3, indMayor.size()); k++) {
                         int idx = indMayor.get(k);
                         System.out.printf("  Top %d: %s | S/. %.2f%n", k+1, nombres.get(idx), precios.get(idx));
@@ -700,7 +712,6 @@ public class Footloose {
                     ArrayList<Integer> indMenor = new ArrayList<>();
                     for (int j = 0; j < nombres.size(); j++) indMenor.add(j);
                     indMenor.sort((a, b) -> Double.compare(precios.get(a), precios.get(b)));
-
                     for (int k = 0; k < Math.min(3, indMenor.size()); k++) {
                         int idx = indMenor.get(k);
                         System.out.printf("  Economico %d: %s | S/. %.2f%n", k+1, nombres.get(idx), precios.get(idx));
@@ -712,7 +723,7 @@ public class Footloose {
                     boolean huboDescuento = false;
                     for (int j = 0; j < nombres.size(); j++) {
                         if (descs.get(j) > 0) {
-                            System.out.printf("  ¡Oferta! -> %s | Desc: %.0f%%%n", nombres.get(j), descs.get(j));
+                            System.out.printf("  Oferta! -> %s | Desc: %.0f%%%n", nombres.get(j), descs.get(j));
                             huboDescuento = true;
                         }
                     }
